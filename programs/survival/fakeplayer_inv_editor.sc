@@ -44,7 +44,7 @@ __on_player_interacts_with_entity(creativeplayer, fakeplayer, hand)->(
         global_fakeplayersscreen:fakeplayer, return()
     );
 
-    screen=create_screen(creativeplayer,'generic_9x6',fakeplayer~'name',_(screen, player, action,data,outer(fakeplayer))->(
+    screen=create_screen(creativeplayer,'generic_9x6',fakeplayer~'display_name',_(screen, player, action,data,outer(fakeplayer))->(
         if(action=='close',(
             drop_item(screen,-1);
             global_fakeplayersscreen:fakeplayer = null;
@@ -55,8 +55,20 @@ __on_player_interacts_with_entity(creativeplayer, fakeplayer, hand)->(
             // CARPET BUG 1.4.66 - Modify not working for fake players: 
             // modify(fakeplayer,'selected_slot', data:'slot'-9);
             // FIX:
-            run('player ' + fakeplayer + ' hotbar ' + (data:'slot'-8))
+            run('player ' + (fakeplayer~'command_name') + ' hotbar ' + (data:'slot'-8))
             // END FIX
+        );
+        if(action=='pickup' && 0==data:'slot',
+            run('player ' + (fakeplayer~'command_name') + ' attack interval 12')
+        );
+        if(action=='pickup' && 5==data:'slot',
+            run('player ' + (fakeplayer~'command_name') + ' attack continuous')
+        );
+        if(action=='pickup' && 6==data:'slot',
+            run('player ' + (fakeplayer~'command_name') + ' use continuous')
+        );
+        if(action=='pickup' && 8==data:'slot',
+            run('player ' + (fakeplayer~'command_name') + ' stop')
         );
         if(inventory_get(screen, data:'slot'):2==global_nope,
             return('cancel')
